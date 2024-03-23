@@ -1,38 +1,67 @@
 package org.example;
 
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import edu.princeton.cs.introcs.StdDraw;
+import java.util.Arrays;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.princeton.cs.introcs.StdDraw;
 
-
+/**
+ * Class that handles N-body simulation.
+ * Constructor accepts a .json config filename, which contains description of a system
+ * Uses StdDraw library for visualisation.
+ */
 public class Simulation {
-    double total_time, delta_time;
-    String filename;
-    ArrayList<Body> bodies = new ArrayList<Body>();
-    public Simulation(double total_time, double delta_time, String filename) {
-        this.total_time = total_time;
-        this.delta_time = delta_time;
-        this.filename = filename;
 
-        //TODO: From file in a loop
-        bodies.add(new Body(-0.4, 1, 0, 0, 400000000));
-        bodies.add(new Body(0.4, 1, 0, -0.15, 100000000));
+    double delta_time;
+    long radius;
+    String filename;
+    ArrayList<Body> bodies = new ArrayList<>();
+    public Simulation(String filename) {
+        this.filename = filename;
+        this.InitializeBodies(filename);
+
+        StdDraw.setCanvasSize(900, 900);
         StdDraw.enableDoubleBuffering();
     }
 
+    /**
+     * Parses .json config file
+     * @param filename config file.
+     */
     private void InitializeBodies(String filename) {
-        ObjectMapper mapper = new ObjectMapper(); // create once, reuse
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Config config = mapper.readValue(new File(filename), Config.class);
+            this.delta_time = config.getDelta_time();
+            this.radius = config.getRadius();
+            this.bodies = config.getBodies();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
+    /**
+     * Main loop. Runs until user presses SPACE .
+     */
     public void run() {
         System.out.println("Running");
-        for (double t = 0; t < this.total_time; t+=this.delta_time) {
+        while (!StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
             do_step();
             draw();
         }
+        System.exit(1);
     }
 
+    /**
+     * Computes forces for one frame
+     * Loops through all bodies and calculate net sum of forces for each of the bodies,
+     * then calls propagate method for each body to update their positions.
+     */
     private void do_step() {
         for (int i = 0; i < bodies.size(); i++) {
             double[] net_force = new double[2];
@@ -44,18 +73,18 @@ public class Simulation {
             }
             bodies.get(i).propagate(net_force, delta_time);
         }
-
-//        System.out.println(bodies);
     }
 
+    /**
+     * Draws bodies. Uses StdDraw library.
+     */
     private void draw(){
-        StdDraw.clear();
-        StdDraw.setScale(-2, 2);
+        StdDraw.setScale(-this.radius, this.radius);
         for (Body body: bodies) {
-            StdDraw.setPenColor(StdDraw.BLACK);
-            StdDraw.filledCircle(body.position[0], body.position[1], 0.05);
+            StdDraw.setPenColor(body.getcolour());
+            StdDraw.filledCircle(body.position[0], body.position[1], 1000000000);
         }
         StdDraw.show();
-        StdDraw.pause(25);
+        StdDraw.pause(10);
     }
 }

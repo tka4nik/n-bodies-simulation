@@ -1,0 +1,18 @@
+{
+  "delta_time": 500,
+  "radius": 0.7e11,
+  "bodies": [
+    {
+      "position": [-0.30e011, 0.00e00],
+      "velocity": [0.00e04, 0.00e06],
+      "mass": 1.64e31,
+      "colour": "red"
+    },
+    {
+      "position": [-0.30e011, 4.50e10],
+      "velocity": [9.00e04, 0.00e00],
+      "mass": 1.989e30,
+      "colour": "green"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "delta_time": 4000,
+  "radius": 1.25e11,
+  "bodies": [
+    {
+      "position": [0.00e00, 0.00e00],
+      "velocity": [0.05e04, 0.00e00],
+      "mass": 5.974e24,
+      "colour": "green"
+    },
+    {
+      "position": [0.00e00,  4.50e10],
+      "velocity": [3.00e04,  0.00e00],
+      "mass": 1.989e30,
+      "colour": "red"
+    },
+    {
+      "position": [0.00e00, -4.50e10],
+      "velocity": [-3.00e04, 0.00e00],
+      "mass": 1.989e30,
+      "colour": "red"
+    },
+    {
+      "position": [2.00e10, -1.50e10],
+      "velocity": [1.00e04, -3.00e04],
+      "mass": 10.974e24,
+      "colour": "yellow"
+    }
+  ]
+}
